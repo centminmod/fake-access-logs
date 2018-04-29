@@ -16,11 +16,11 @@ if [ ! -d "$DIR_TEST" ]; then
 fi
 
 download_files() {
-  if [ -d "$DIR_TEST" ]; then
+  if [[ -d "$DIR_TEST" && ! -f "${DIR_TEST}/access_log_20180428-234724.log.gz" ]]; then
     cd "$DIR_TEST"
-    wget -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
-    wget -O "${DIR_TEST}/access_log_20180429-005239.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
-    wget -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+    wget -q -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+    wget -q -O "${DIR_TEST}/access_log_20180429-005239.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
+    wget -q -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
   fi
 }
 
