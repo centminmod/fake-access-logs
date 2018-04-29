@@ -5,7 +5,9 @@
 # variables
 #############
 DT=$(date +"%d%m%y-%H%M%S")
-ACCESSLOG_NAME='access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz'
+ACCESSLOG_NAMEA='access_log_20180428-234724.log.gz'
+ACCESSLOG_NAMEB='access_log_20180429-005239.log.gz'
+ACCESSLOG_NAMEC='access_log_20180429-012648.log.gz'
 DIR_TEST='/home/zcat-test'
 
 #########################################################
@@ -18,14 +20,14 @@ fi
 download_files() {
   if [ -d "$DIR_TEST" ]; then
     cd "$DIR_TEST"
-    if [ ! -f "${DIR_TEST}/access_log_20180428-234724.log.gz" ]; then
-      wget -q -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+    if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEA}" ]; then
+      wget -q -O "${DIR_TEST}/${ACCESSLOG_NAMEA}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
     fi
-    if [ ! -f "${DIR_TEST}/access_log_20180429-005239.log.gz" ]; then
-      wget -q -O "${DIR_TEST}/access_log_20180429-005239.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
+    if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEB}" ]; then
+      wget -q -O "${DIR_TEST}/${ACCESSLOG_NAMEB}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
     fi
-    if [ ! -f "${DIR_TEST}/access_log_20180429-012648.log.gz" ]; then
-      wget -q -O "${DIR_TEST}/access_log_20180429-012648.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-012648.log.gz
+    if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEC}" ]; then
+      wget -q -O "${DIR_TEST}/${ACCESSLOG_NAMEC}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-012648.log.gz
     fi
   fi
 }
@@ -40,8 +42,8 @@ test_zcat() {
   download_files
   clear_it
   cd "$DIR_TEST"
-  echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAME" | wc -l"
-  /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAME" | wc -l
+  echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
+  /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
 }
 
 test_pzcat() {
@@ -50,8 +52,8 @@ test_pzcat() {
     download_files
     clear_it
     cd "$DIR_TEST"
-    echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAME" | wc -l"
-    /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAME" | wc -l
+    echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
+    /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
   else
     echo
     echo "system has less than 2 cpu threads so pigz based pzcat will have no benefit"
