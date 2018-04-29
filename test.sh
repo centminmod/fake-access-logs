@@ -58,7 +58,7 @@ test_zcat() {
   cd "$DIR_TEST"
   echo "zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
   /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
-  clean_up
+
 }
 
 test_pzcat() {
@@ -69,7 +69,7 @@ test_pzcat() {
     cd "$DIR_TEST"
     echo "pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
     /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
-    clean_up
+  
   else
     echo
     echo "system has less than 2 cpu threads so pigz based pzcat will have no benefit"
@@ -82,11 +82,17 @@ test_pzcat() {
 case $1 in
   zcat )
     test_zcat
+    clean_up
     ;;
   pzcat )
     test_pzcat
+    clean_up
     ;;
-  pattern )
+  all )
+    test_zcat
+    echo
+    test_pzcat
+    clean_up
     ;;
   pattern )
     ;;
@@ -94,7 +100,7 @@ case $1 in
     ;;
   * )
     echo
-    echo "$0 {zcat|pzcat}"
+    echo "$0 {zcat|pzcat|all}"
     echo
     ;;
 esac

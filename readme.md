@@ -54,6 +54,17 @@ real: 2.64s user: 2.23s sys: 0.40s cpu: 99% maxmem: 1316 KB cswaits: 79180
 
 # Scripted Tests
 
+Download test.sh directly:
+
+```
+curl -sL https://github.com/centminmod/fake-access-logs/raw/master/test.sh -o test.sh && chmod +x test.sh
+./test.sh zcat
+./test.sh pzcat
+./test.sh all
+```
+
+Or use `git clone`
+
 ```
 mkdir -p /root/tools
 cd /root/tools
@@ -83,5 +94,18 @@ pzcat multi-threaded test
 ./test.sh pzcat
 pzcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
 real: 2.68s user: 2.28s sys: 0.35s cpu: 98% maxmem: 1320 KB cswaits: 81475
+3000000
+```
+
+run both zcat and pzcat tests using `all` flag
+
+```
+./test.sh all                 
+zcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
+real: 3.60s user: 3.33s sys: 0.16s cpu: 97% maxmem: 1320 KB cswaits: 10
+3000000
+
+pzcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
+real: 2.67s user: 2.23s sys: 0.40s cpu: 98% maxmem: 1320 KB cswaits: 81973
 3000000
 ```
