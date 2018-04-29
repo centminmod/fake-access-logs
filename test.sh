@@ -24,6 +24,16 @@ elif [[ ! -f /usr/bin/pigz && -f /usr/bin/apt-get ]]; then
   apt-get -y install pigz
 fi
 
+parallel_install() {
+  # ls *.log.gz | parallel "(zcat {} | wc -l)"
+  # ls *.log.gz | time parallel "(zcat {})" | wc -l
+  if [ ! -f /usr/bin/parallel ]; then
+    yum -y -q install parallel
+    mkdir -p ~/.parallel
+    touch ~/.parallel/will-cite
+  fi
+}
+
 download_files() {
   if [ -d "$DIR_TEST" ]; then
     cd "$DIR_TEST"
