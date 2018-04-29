@@ -71,7 +71,7 @@ zcat test
 
 ```
 ./test.sh zcat               
-/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
+zcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
 real: 3.66s user: 3.36s sys: 0.15s cpu: 96% maxmem: 1320 KB cswaits: 1
 3000000
 ```
@@ -80,7 +80,7 @@ pzcat multi-threaded test
 
 ```
 ./test.sh pzcat
-/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
+pzcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
 real: 2.68s user: 2.28s sys: 0.35s cpu: 98% maxmem: 1320 KB cswaits: 81475
 3000000
 ```
