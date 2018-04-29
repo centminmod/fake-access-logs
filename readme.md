@@ -35,7 +35,7 @@ real: 4.15s user: 3.39s sys: 0.43s cpu: 92% maxmem: 1316 KB cswaits: 3
 If you have more than 3 cpu threads on system you can create multi-threaded version of zcat switching out single threaded gzip for multi-threaded pigz compression tool and create a `/usr/bin/pzcat` command using below code:
 
 ```
-if [[ "$(nproc)" -ge '2' && ! -f /usr/bin/pzcat && -f /usr/bin/zcat ]]; then \cp -af /usr/bin/zcat /usr/bin/pzcat; sed -i 's|exec gzip -cd|exec pigz -cd|' /usr/bin/pzcat; fi
+if [[ "$(nproc)" -ge '2' && ! -f /usr/bin/pzcat && -f /usr/bin/zcat && -f /usr/bin/pigz ]]; then \cp -af /usr/bin/zcat /usr/bin/pzcat; sed -i 's|exec gzip -cd|exec pigz -cd|' /usr/bin/pzcat; fi
 ```
 
 In which case test command would be:
