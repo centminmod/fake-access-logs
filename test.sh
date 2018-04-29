@@ -32,6 +32,20 @@ download_files() {
   fi
 }
 
+clean_up() {
+  if [ -d "$DIR_TEST" ]; then
+    if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEA}" ]; then
+      rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEA}"
+    fi
+    if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEB}" ]; then
+      rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEB}"
+    fi
+    if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEC}" ]; then
+      rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEC}"
+    fi
+  fi
+}
+
 clear_it() {
   if [ ! -f /proc/user_beancounters ]; then
     sync && echo 3 > /proc/sys/vm/drop_caches
@@ -44,6 +58,7 @@ test_zcat() {
   cd "$DIR_TEST"
   echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
   /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
+  clean_up
 }
 
 test_pzcat() {
@@ -54,6 +69,7 @@ test_pzcat() {
     cd "$DIR_TEST"
     echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
     /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
+    clean_up
   else
     echo
     echo "system has less than 2 cpu threads so pigz based pzcat will have no benefit"
