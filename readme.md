@@ -56,7 +56,7 @@ real: 2.64s user: 2.23s sys: 0.40s cpu: 99% maxmem: 1316 KB cswaits: 79180
 
 # Scripted Tests
 
-Download test.sh directly:
+## Download test.sh directly:
 
 ```
 curl -sL https://github.com/centminmod/fake-access-logs/raw/master/test.sh -o test.sh && chmod +x test.sh
@@ -75,11 +75,33 @@ cd fake-access-logs
 ./test.sh
 ```
 
+## To update the test.sh code when updates occur:
+
+If you downloaded test.sh directly, change into directory where test.sh is located and run commands
+
+```
+cd /path/to/where/test.sh
+rm -rf test.sh
+curl -sL https://github.com/centminmod/fake-access-logs/raw/master/test.sh -o test.sh && chmod +x test.sh
+```
+
+If you installed via git clone
+
+```
+cd /root/tools/fake-access-logs
+git stash
+git pull
+```
+
+## Command Usage Options
+
 ```
 ./test.sh 
 
 ./test.sh {zcat|pzcat}
 ```
+
+## Examples
 
 zcat test
 
