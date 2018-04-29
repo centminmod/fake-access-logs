@@ -56,6 +56,7 @@ real: 2.64s user: 2.23s sys: 0.40s cpu: 99% maxmem: 1316 KB cswaits: 79180
 
 ```
 mkdir -p /root/tools
+cd /root/tools
 git clone https://github.com/centminmod/fake-access-logs
 cd fake-access-logs
 ./test.sh
