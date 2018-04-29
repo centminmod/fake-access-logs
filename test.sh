@@ -5,11 +5,24 @@
 # variables
 #############
 DT=$(date +"%d%m%y-%H%M%S")
-ACCESSLOG_NAME='access_log_20180428-234724.log.gz'
+ACCESSLOG_NAME='access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz'
+DIR_TEST='/home/zcat-test'
 
 #########################################################
 # functions
 #############
+if [ ! -d "$DIR_TEST" ]; then
+  mkdir -p "$DIR_TEST"
+fi
+
+download_files() {
+  if [ -d "$DIR_TEST" ]; then
+    cd "$DIR_TEST"
+    wget -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+    wget -O "${DIR_TEST}/access_log_20180429-005239.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
+    wget -O "${DIR_TEST}/access_log_20180428-234724.log.gz" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+  fi
+}
 
 clear_it() {
   if [ ! -f /proc/user_beancounters ]; then
@@ -18,7 +31,9 @@ clear_it() {
 }
 
 test_zcat() {
+  download_files
   clear_it
+  cd "$DIR_TEST"
   echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAME" | wc -l"
   /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAME" | wc -l
 }
@@ -26,7 +41,9 @@ test_zcat() {
 test_pzcat() {
   if [[ "$(nproc)" -ge '2' && ! -f /usr/bin/pzcat && -f /usr/bin/zcat ]]; then \cp -af /usr/bin/zcat /usr/bin/pzcat; sed -i 's|exec gzip -cd|exec pigz -cd|' /usr/bin/pzcat; fi
   if [ -f /usr/bin/pzcat ]; then
+    download_files
     clear_it
+    cd "$DIR_TEST"
     echo "/usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAME" | wc -l"
     /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAME" | wc -l
   else
