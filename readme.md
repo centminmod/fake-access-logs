@@ -1,4 +1,4 @@
-Fake access logs generated using [Fake Apache Log Generator](https://github.com/kiritbasu/Fake-Apache-Log-Generator). Used for benchmarking compressed access log processing through zcat. Intended for zcat compressed access log benchmarking routine to be added to [centminmodbench.sh](https://github.com/centminmod/centminmodbench/) script. If you use log analysis tools like [ngxtop](https://community.centminmod.com/threads/ngxtop-real-time-metrics-for-nginx.285/), then you would need to use zcat to inspect and pipe to ngxtop many gz compressed Nginx access logs using zcat. So knowing how well your server can perform for zcat operations is important.
+Fake access logs generated using [Fake Apache Log Generator](https://github.com/kiritbasu/Fake-Apache-Log-Generator). Used for benchmarking compressed access log processing through zcat. Intended for zcat compressed access log benchmarking routine to be added to [centminmodbench.sh](http://bench.centminmod.com/) script. If you use log analysis tools like [ngxtop](https://community.centminmod.com/threads/ngxtop-real-time-metrics-for-nginx.285/), then you would need to use zcat to inspect and pipe to ngxtop many gz compressed Nginx access logs using zcat. So knowing how well your server can perform for zcat operations is important.
 
 * `access_log_20180428-234724.log.gz` - 1 million line access log with 211MB uncompressed size and 41MB compressed size
 * `access_log_20180429-005239.log.gz` - 1 million line access log with 211MB uncompressed size and 41MB compressed size
@@ -67,12 +67,16 @@ cd fake-access-logs
 ./test.sh {zcat|pzcat}
 ```
 
+zcat test
+
 ```
 ./test.sh zcat               
 /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
 real: 3.66s user: 3.36s sys: 0.15s cpu: 96% maxmem: 1320 KB cswaits: 1
 3000000
 ```
+
+pzcat multi-threaded test
 
 ```
 ./test.sh pzcat
