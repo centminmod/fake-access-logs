@@ -17,6 +17,13 @@ if [ ! -d "$DIR_TEST" ]; then
   mkdir -p "$DIR_TEST"
 fi
 
+if [[ ! -f /usr/bin/pigz && -f /usr/bin/yum ]]; then
+  yum -y -q install pigz
+elif [[ ! -f /usr/bin/pigz && -f /usr/bin/apt-get ]]; then
+  apt-get update
+  apt-get -y install pigz
+fi
+
 download_files() {
   if [ -d "$DIR_TEST" ]; then
     cd "$DIR_TEST"
