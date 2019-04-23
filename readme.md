@@ -62,6 +62,7 @@ real: 2.64s user: 2.23s sys: 0.40s cpu: 99% maxmem: 1316 KB cswaits: 79180
 curl -sL https://github.com/centminmod/fake-access-logs/raw/master/test.sh -o test.sh && chmod +x test.sh
 ./test.sh zcat
 ./test.sh pzcat
+./test.sh zstdcat
 ./test.sh all
 ```
 

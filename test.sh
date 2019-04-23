@@ -8,8 +8,12 @@ DT=$(date +"%d%m%y-%H%M%S")
 ACCESSLOG_NAMEA='access_log_20180428-234724.log.gz'
 ACCESSLOG_NAMEB='access_log_20180429-005239.log.gz'
 ACCESSLOG_NAMEC='access_log_20180429-012648.log.gz'
+ACCESSLOG_NAMEA_ZSTD='access_log_20180428-234724.log.zst'
+ACCESSLOG_NAMEB_ZSTD='access_log_20180429-005239.log.zst'
+ACCESSLOG_NAMEC_ZSTD='access_log_20180429-012648.log.zst'
 DIR_TEST='/home/zcat-test'
 
+CLEANUP='n'
 #########################################################
 # functions
 #############
@@ -36,21 +40,24 @@ parallel_install() {
 
 download_files() {
   if [ -d "$DIR_TEST" ]; then
-    cd "$DIR_TEST"
     if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEA}" ]; then
-      wget -q -O "${DIR_TEST}/${ACCESSLOG_NAMEA}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+      echo "downloading test access logs"
+      cd "$DIR_TEST"
+      wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEA}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
     fi
     if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEB}" ]; then
-      wget -q -O "${DIR_TEST}/${ACCESSLOG_NAMEB}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
+      wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEB}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
     fi
     if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEC}" ]; then
-      wget -q -O "${DIR_TEST}/${ACCESSLOG_NAMEC}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-012648.log.gz
+      wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEC}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-012648.log.gz
+      echo "download complete"
+      echo
     fi
   fi
 }
 
 clean_up() {
-  if [ -d "$DIR_TEST" ]; then
+  if [[ "$CLEANUP" = [yY] && -d "$DIR_TEST" ]]; then
     if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEA}" ]; then
       rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEA}"
     fi
@@ -59,6 +66,15 @@ clean_up() {
     fi
     if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEC}" ]; then
       rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEC}"
+    fi
+    if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEA_ZSTD}" ]; then
+      rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEA_ZSTD}"
+    fi
+    if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEB_ZSTD}" ]; then
+      rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEB_ZSTD}"
+    fi
+    if [ -f "${DIR_TEST}/${ACCESSLOG_NAMEC_ZSTD}" ]; then
+      rm -rf "${DIR_TEST}/${ACCESSLOG_NAMEC_ZSTD}"
     fi
   fi
 }
@@ -69,12 +85,35 @@ clear_it() {
   fi
 }
 
+test_zstdcat() {
+if [ -f "$(which zstd)" ]; then
+  download_files
+  if [[ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEA_ZSTD}" ]]; then
+    cd "${DIR_TEST}"
+    pigz -dkf *.gz
+    echo
+    echo "creating zstd compressed versions of access logs"
+    echo
+    find . -type f -name "*.log" -exec zstd -T0 -f  {} \;
+    echo
+  fi
+  clear_it
+  cd "$DIR_TEST"
+  echo "zstdcat "$ACCESSLOG_NAMEA_ZSTD" "$ACCESSLOG_NAMEB_ZSTD" "$ACCESSLOG_NAMEC_ZSTD" | wc -l"
+  /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zstdcat "$ACCESSLOG_NAMEA_ZSTD" "$ACCESSLOG_NAMEB_ZSTD" "$ACCESSLOG_NAMEC_ZSTD" | wc -l
+  ls -lAh "${DIR_TEST}"
+else
+  echo "zstdcat not found"
+fi
+}
+
 test_zcat() {
   download_files
   clear_it
   cd "$DIR_TEST"
   echo "zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
   /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' zcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
+  ls -lAh "${DIR_TEST}"
 
 }
 
@@ -86,6 +125,7 @@ test_pzcat() {
     cd "$DIR_TEST"
     echo "pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l"
     /usr/bin/time --format='real: %es user: %Us sys: %Ss cpu: %P maxmem: %M KB cswaits: %w' pzcat "$ACCESSLOG_NAMEA" "$ACCESSLOG_NAMEB" "$ACCESSLOG_NAMEC" | wc -l
+    ls -lAh "${DIR_TEST}"
   
   else
     echo
@@ -105,10 +145,16 @@ case $1 in
     test_pzcat
     clean_up
     ;;
+  zstdcat )
+    test_zstdcat
+    clean_up
+    ;;
   all )
     test_zcat
     echo
     test_pzcat
+    echo
+    test_zstdcat
     clean_up
     ;;
   pattern )
