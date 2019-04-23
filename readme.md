@@ -112,10 +112,17 @@ git lfs pull
 zcat test
 
 ```
-./test.sh zcat               
+./test.sh zcat
 zcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
-real: 3.66s user: 3.36s sys: 0.15s cpu: 96% maxmem: 1320 KB cswaits: 1
+real: 2.65s user: 2.56s sys: 0.09s cpu: 99% maxmem: 1460 KB cswaits: 17
 3000000
+total 252M
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180428-234724.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180428-234724.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-005239.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-005239.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-012648.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-012648.log.zst
 ```
 
 pzcat multi-threaded test
@@ -123,19 +130,70 @@ pzcat multi-threaded test
 ```
 ./test.sh pzcat
 pzcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
-real: 2.68s user: 2.28s sys: 0.35s cpu: 98% maxmem: 1320 KB cswaits: 81475
+real: 1.37s user: 1.82s sys: 0.21s cpu: 148% maxmem: 1460 KB cswaits: 44400
 3000000
+total 252M
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180428-234724.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180428-234724.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-005239.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-005239.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-012648.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-012648.log.zst
 ```
 
-run both zcat and pzcat tests using `all` flag
+zstdcat test
 
 ```
-./test.sh all                 
+./test.sh zstdcat
+zstdcat access_log_20180428-234724.log.zst access_log_20180429-005239.log.zst access_log_20180429-012648.log.zst | wc -l
+real: 5.82s user: 5.64s sys: 0.15s cpu: 99% maxmem: 3328 KB cswaits: 20229
+3000000
+total 252M
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180428-234724.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180428-234724.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-005239.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-005239.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-012648.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-012648.log.zst
+```
+
+run both zcat and pzcat and zstdcat tests using `all` flag
+
+```
+./test.sh all
+downloading test access logs
+download complete
+
 zcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
-real: 3.60s user: 3.33s sys: 0.16s cpu: 97% maxmem: 1320 KB cswaits: 10
+real: 2.67s user: 2.56s sys: 0.10s cpu: 99% maxmem: 1460 KB cswaits: 19
 3000000
+total 252M
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180428-234724.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180428-234724.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-005239.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-005239.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-012648.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-012648.log.zst
 
 pzcat access_log_20180428-234724.log.gz access_log_20180429-005239.log.gz access_log_20180429-012648.log.gz | wc -l
-real: 2.67s user: 2.23s sys: 0.40s cpu: 98% maxmem: 1320 KB cswaits: 81973
+real: 1.34s user: 1.80s sys: 0.20s cpu: 149% maxmem: 1456 KB cswaits: 44412
 3000000
+total 252M
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180428-234724.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180428-234724.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-005239.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-005239.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-012648.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-012648.log.zst
+
+zstdcat access_log_20180428-234724.log.zst access_log_20180429-005239.log.zst access_log_20180429-012648.log.zst | wc -l
+real: 5.83s user: 5.66s sys: 0.13s cpu: 99% maxmem: 3328 KB cswaits: 20243
+3000000
+total 252M
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180428-234724.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180428-234724.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-005239.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-005239.log.zst
+-rw-r--r-- 1 root root 41M Apr 23 02:38 access_log_20180429-012648.log.gz
+-rw-r--r-- 1 root root 44M Apr 23 02:38 access_log_20180429-012648.log.zst
 ```
