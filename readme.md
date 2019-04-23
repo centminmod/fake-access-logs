@@ -68,10 +68,14 @@ curl -sL https://github.com/centminmod/fake-access-logs/raw/master/test.sh -o te
 Or use `git clone`
 
 ```
+yum -y install git-lfs
 mkdir -p /root/tools
 cd /root/tools
 git clone https://github.com/centminmod/fake-access-logs
 cd fake-access-logs
+git lfs install
+git lfs pull
+git lfs ls-files
 ./test.sh
 ```
 
