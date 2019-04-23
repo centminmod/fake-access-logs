@@ -104,7 +104,7 @@ git lfs pull
 ```
 ./test.sh 
 
-./test.sh {zcat|pzcat}
+./test.sh {zcat|pzcat|zstdcat}
 ```
 
 ## Examples
