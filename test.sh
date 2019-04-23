@@ -44,12 +44,15 @@ download_files() {
       echo "downloading test access logs"
       cd "$DIR_TEST"
       wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEA}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.gz
+      wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEA_ZSTD}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180428-234724.log.zst
     fi
     if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEB}" ]; then
       wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEB}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.gz
+      wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEB_ZSTD}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-005239.log.zst
     fi
     if [ ! -f "${DIR_TEST}/${ACCESSLOG_NAMEC}" ]; then
       wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEC}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-012648.log.gz
+      wget -4 -q -O "${DIR_TEST}/${ACCESSLOG_NAMEC_ZSTD}" https://github.com/centminmod/fake-access-logs/raw/master/logs/access_log_20180429-012648.log.zst
       echo "download complete"
       echo
     fi
