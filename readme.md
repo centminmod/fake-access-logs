@@ -95,6 +95,7 @@ If you installed via git clone
 cd /root/tools/fake-access-logs
 git stash
 git pull
+git lfs pull
 ```
 
 ## Command Usage Options
